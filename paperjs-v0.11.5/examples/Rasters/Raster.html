@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Raster</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <script type="text/javascript" src="../../dist/paper-full.js"></script>
+    <script type="text/paperscript" canvas="canvas">
+        // Load from Server:
+        var raster = new Raster('http://assets.paperjs.org/images/marilyn.jpg');
+        // Load from DOM image:
+        // var raster = new Raster('marilyn');
+        raster.onLoad = function() {
+            console.log('Successfully loaded image!');
+        };
+        var lastScale = 1;
+        var center = view.center;
+        function onFrame(event) {
+            var scale = (Math.sin(event.time * 2) + 1) / 2;
+            raster.scale(scale / lastScale);
+            lastScale = scale;
+            raster.position = center + [
+                Math.sin(event.time * 3) * 256,
+                Math.sin(event.time * 2.5) * 256
+            ];
+            raster.rotate(event.delta * 120);
+        }
+    </script>
+</head>
+<body>
+    <canvas id="canvas" resize></canvas>
+    <img id="marilyn" width="512" height="512" style="display: none;" src=" PFQGhNHpRD9zM9CeV5wJ2KnOrauCpkrV7ZsSRdINvGj0oklkTfU873I8s8FIVLdDSjf2krUEDW40B8KPSiRd+fieD6l0ncVkq6k3PWp8EV834gVJeXcLWVX+NNRSB3GYlLKtadEVtsaTQKoL0ERE3oAFACoAVACoAVACoAclJV060mxpVHKbUnqDfrSqPiwWoJFt9gYPvcolzSLiLFVY+G5xQSKxMh6HZ+1rdb7Z0YTpWBF6HqG1UAa1IQr0CB4GgEAUDMg0oGtqMUYhh8qSkJQVBZI6knQ0Ct+SRtpsd+QgNMyFMI3D3VoF1qAN7A9AD0NJxUtGbVpXFRmfTwFr+VTbSVEWpJKiFQhBFSQMd00qQhGgAeNqADprQgGq0oYDPC9RGKgAE+HlQAr6VEmYlGkxmNCV36GseocgqCknUGkNSHJve5FqdWOoSo1ZyCiHpWPPWmpEWh/uVbUVB4UDa1STK2PCtatRFma4AFWdCALj5UhgUoGoEhhNAA0pAE0hhSSPGmIeSPOhjG3UNQaQDybiw8RrarSp+Pgzkfv3E+l7gS3BfbJaZfBP+pFj/AirrZ4/7rhxzX8UiqT41acaxtBEOtOgVFQJiooFBU6DEaKEZA1pUICtTAVAxUBUVr0AC2tAB2/GgAbTQIFqBioAVACt/CgRucPx+dlHE+ygKSVhGv8AqP8AwqqVxIy7NhzJs12zzLUZEiNCMxty/wCsnUNDdbcbfI1ju+mbBYTia7K8UnsupkNtplNkgLLfxTYBSb6a+IqSuoruY76ELlsOR5C2nU7FpNtvlWSnVGvkqMvH7dmP087KI8Y7d/8A7lVhXz0D2rGkbkuqoXcawYnoMtwa3FqmRHGgBtACoAN6CQ4WtQJm2hO72EhR9SfTb5UGzsOsTOSPOihcK486EMIIv/yq1CDcHUUxCvQAh1oAVh1vSAaSPOgBpI86iMXgPOhANUai2MapXkbmkwMd79ahVhU//9k="/>
+</body>
+</html>
