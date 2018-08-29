@@ -1044,8 +1044,16 @@ function update_everything()
 
 // debugging code with keys
 function onKeyDown(event)
-{
-  if(event.key == "space"){console.log(circle2_pos_cart);}
+{try
+  {
+  if(event.key == "1"){console.log(real_to_cartesian_r(cartesian_to_real(circle1_pos_cart)));} //writing out cartesian values, rounded up to 1 digit
+  if(event.key == "2"){console.log(real_to_cartesian_r(cartesian_to_real(circle2_pos_cart)));}
+  }
+  catch(err)
+  {
+    console.log(err.message)
+  }
+
 }
 
 
