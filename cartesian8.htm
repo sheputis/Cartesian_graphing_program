@@ -89,46 +89,43 @@ var canvas = document.getElementById("canvas");
 var ctx = canvas.getContext("2d");
 
 
+var grid_color= "#e9e9e9";
+var grid_color_smaller = "	#F5F5F5";
+var axis_color="#3f3f3f";
+var grid_size_smallest = 100; //these are the limits of what the grid_size in pixel can span
+var grid_size_largest  = 200; //
+var grid_size=grid_size_smallest; //the amount of pixels that a grid length spans
+var grid_size_x = grid_size+50;
+var grid_size_y = grid_size+20;
+var canvas_width = canvas.scrollWidth; //the height and the width of the canvas element
+var canvas_height = canvas.scrollHeight;
+var num_lines_x = Math.floor(canvas_height/grid_size_x);
+var num_lines_y = Math.floor(canvas_width/grid_size_y);
+var origo = new Point(100,500); //Real coordinates for the origin//
 
-function initialize_parameters() //setting initial values to all parameters defined
-{
- grid_color= "#e9e9e9";
- grid_color_smaller = "	#F5F5F5";
- axis_color="#3f3f3f";
- grid_size_smallest = 100; //these are the limits of what the grid_size in pixel can span
- grid_size_largest  = 200; //
- grid_size=grid_size_smallest; //the amount of pixels that a grid length spans
- grid_size_x = grid_size+50;
- grid_size_y = grid_size+20;
- canvas_width = canvas.scrollWidth; //the height and the width of the canvas element
- canvas_height = canvas.scrollHeight;
- num_lines_x = Math.floor(canvas_height/grid_size_x);
- num_lines_y = Math.floor(canvas_width/grid_size_y);
- origo = new Point(100,500); //Real coordinates for the origin//
+var x_axis_ori=origo.y/grid_size_y; // where the axis origin is located//
+var y_axis_ori=origo.x/grid_size_x; //x_axis is the y coordinate of the x-line, the number of grid lines from the boundaries
 
- x_axis_ori=origo.y/grid_size_y; // where the axis origin is located//
- y_axis_ori=origo.x/grid_size_x; //x_axis is the y coordinate of the x-line, the number of grid lines from the boundaries
-
- num_scale = 1;     //the scaled, cartesian length of a square
- num_scale_x = num_scale;
- num_scale_y = num_scale;
- precision = 10;      // to what decimal you want the coordinates to be rounded
+var num_scale = 1;     //the scaled, cartesian length of a square
+var num_scale_x = num_scale;
+var num_scale_y = num_scale;
+var precision = 10;      // to what decimal you want the coordinates to be rounded
 
 
- // lines arrays that will contain a path line in each slot
- lines_x= new Group(); // this will be filled in set_up_x_grid()
- lines_y= new Group(); // --||-- --||-- --||--   set_up_y_grid()
- lines_x_smaller = new Group() // smaller grids
- lines_y_smaller = new Group()
- x_axis = new Path();
- y_axis = new Path();
+// lines arrays that will contain a path line in each slot
+var lines_x= new Group(); // this will be filled in set_up_x_grid()
+var lines_y= new Group(); // --||-- --||-- --||--   set_up_y_grid()
+var lines_x_smaller = new Group() // smaller grids
+var lines_y_smaller = new Group()
+var x_axis = new Path();
+var y_axis = new Path();
 
- //the following variables are specifically used for zooming in and out from the mouse position in the zoom() function
- mouse_pos_pixel_old = 0;
- mouse_pos_cart = 0;
- mouse_pos_pixel_new = 0;
- mouse_pos_pixel_delta = 0;
-}
+//the following variables are specifically used for zooming in and out from the mouse position in the zoom() function
+var mouse_pos_pixel_old = 0;
+var mouse_pos_cart = 0;
+var mouse_pos_pixel_new = 0;
+var mouse_pos_pixel_delta = 0;
+
 // updating the grid size, the origin in both pixel and cartesian.
 function update_parameters(grid_size_x,grid_size_y,origo_) //this function is used for every iteration of OnFrame() and for every onMouseDrag() events
 {
@@ -150,7 +147,7 @@ function set_up_x_grid_smaller() //setting up the smaller horisontal grid line o
 
  // copying the first line object and pasting it downwards with intervals
 
- for (i=1;i<=num_lines_x_smaller; i++ )
+ for (var i=1;i<=num_lines_x_smaller; i++ )
  {
    var line =first_line.clone();
    line.segments[0].point.y=grid_size_smaller*(i+a);
@@ -190,7 +187,7 @@ function set_up_y_grid_smaller() //setting up vertical grid line objects to form
 
  // copying the first line object and pasting it downwards with intervals
 
- for (i=1;i<=num_lines_y_smaller; i++ )
+ for (var i=1;i<=num_lines_y_smaller; i++ )
  {
    var line =first_line.clone();
    line.segments[0].point.x = grid_size_smaller*(i+a-5);
@@ -231,7 +228,7 @@ function set_up_x_grid() //setting up the main horisontal grid line objects that
 
  // copying the first line object and pasting it downwards with intervals
 
- for (i=1;i<=num_lines_x; i++ )
+ for (var i=1;i<=num_lines_x; i++ )
  {
    var line = first_line.clone();
    line.segments[0].point.y=grid_size_y*(i+a);
@@ -258,7 +255,7 @@ function set_up_y_grid() //setting up the main vertical grid line objects that w
 
    // copying the first line object and pasting it downwards with intervals
 
-   for (i=1;i<=num_lines_y; i++ )
+   for (var i=1;i<=num_lines_y; i++ )
    {
      var line =first_line.clone();
      line.segments[0].point.x=grid_size_x*(i+a);
@@ -324,7 +321,7 @@ function set_up_numbers_on_y_axis()   //here we draw the numbers on the y axis//
 }
 function set_up_numbers_on_x_axis() //here we draw the numbers on the x axis//
 {
- for(i=-y_axis_ori+1;i<num_lines_y-y_axis_ori+2;i++)
+ for(var i=-y_axis_ori+1;i<num_lines_y-y_axis_ori+2;i++)
  {
    if (Math.floor(i)!=0) // &&Math.floor(i)%2==0
    {
@@ -880,8 +877,6 @@ points_list_cart = ['shit'];
 point_move_boolean = false; // this is for moving the point
 
 
-
-initialize_parameters();
 
 set_up_x_grid();  // setting up the horisontal grid elements
 set_up_y_grid();  // setting up the vertical grid elements
