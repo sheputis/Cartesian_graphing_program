@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { PaperScope,Path,Point,Project,Group,PointText, project, tool } from 'paper'
+import { PaperScope,Path,Point,Project,Group,PointText, tool } from 'paper'
 import './papel.css';
 
 class Papel extends Component {
@@ -16,7 +16,7 @@ class Papel extends Component {
   render() {
         return (
 
-            <canvas id="paper" width={200} height={520} />
+            <canvas id="paper" width={600} height={600} />
 
 
         )
@@ -152,6 +152,33 @@ class Papel extends Component {
             lines_y_smaller.children[i + num_lines_y_smaller].segments[1].point.x=canvas_height+20;
           }
           lines_y_smaller.sendToBack();
+        }
+        function set_up_x_grid_test() //setting up the main horisontal grid line objects that will be numbered
+        {
+         //the very first x line is being drawn
+         var a = x_axis_ori - Math.floor(x_axis_ori);
+         var from = new Point(0,a*grid_size_y);
+         var to = new Point(canvas_width,a*grid_size_y);
+         var first_line = new Path.Line(from, to);
+         lines_x.addChild(first_line);
+         lines_x.strokeColor = grid_color;
+         console.log(from)
+         // copying the first line object and pasting it downwards with intervals
+         var pshhh = new Path.Line({x:100,y:100},{x:400,y:400});
+         pshhh.strokeColor = 'black'
+         for (var i=1;i<=num_lines_x; i++ )
+         {
+           var line = first_line.clone();
+           line.segments[0].point.y=grid_size_y*(i+a);
+           line.segments[1].point.y=grid_size_y*(i+a)
+           lines_x.addChild(line);
+         }
+         // adding and coloring the x axis:
+         x_axis=new Path();
+         x_axis.strokeColor=axis_color;
+         x_axis.add(new Point(0,grid_size_y*x_axis_ori));
+         x_axis.add(new Point(canvas_width,grid_size_y*x_axis_ori));
+         x_axis.name = "x_axis";
         }
         function set_up_x_grid() //setting up the main horisontal grid line objects that will be numbered
         {
@@ -295,7 +322,7 @@ class Papel extends Component {
          }
         function remove_all_PointText() //to remove numbers from the axis at each onFrame
         {
-         var PointTexts = project.getItems(
+         var PointTexts = Project.getItems(
            {
              class: PointText,
            }
@@ -826,8 +853,8 @@ class Papel extends Component {
         var point_move_boolean = false; // this is for moving the point
 
 
-
-        set_up_x_grid();  // setting up the horisontal grid elements
+        set_up_x_grid_test();
+      //  set_up_x_grid();  // setting up the horisontal grid elements
         set_up_y_grid();  // setting up the vertical grid elements
 
         set_up_x_grid_smaller();  // setting up the smaller horisontal grid elements
@@ -846,17 +873,17 @@ class Papel extends Component {
 
         function onMouseMove(event) // when hovering over an object, like axis
         {
-            var hitResult = project.hitTest(event.point,hitOptions);
+            var hitResult = Project.hitTest(event.point,hitOptions);
             if(check_if_clicked_on_x_axis(hitResult)){document.body.style.cursor = "w-resize";}
             else if(check_if_clicked_on_y_axis(hitResult)){document.body.style.cursor = "n-resize";}
             else{document.body.style.cursor = "default";}
         }
 
-
-        function onMouseDown(event)
+        scope.view.onMouseDown = function(event) //function onMouseDown(event)
         {
         // extracting the object that has been clicked on
-        var hitResult = project.hitTest(event.point,hitOptions);
+        console.log(Project.view)
+        var hitResult = Project.hitTest(event.point,hitOptions);
         console.log(hitResult)
         //checking if the object that has been hit is a circle, if so, circle_move is assing TRUE so that it can be moved around in drag()
         circle_move = check_if_clicked_on_circle(hitResult);
@@ -989,11 +1016,12 @@ class Papel extends Component {
         }
 
         // debugging code with keys
-        function onKeyDown(event)
+
+        scope.view.onKeyDown = function(event)  //   function onMouseDown(event)
         {try
           {
           if(event.key == "1"){console.log(real_to_cartesian_r(cartesian_to_real(circle1_pos_cart)));} //writing out cartesian values, rounded up to 1 digit
-          if(event.key == "2"){console.log(real_to_cartesian_r(cartesian_to_real(circle2_pos_cart)));}
+          if(event.key == "2"){console.log(real_to_cartesian_r(cartesian_to_real(circle2_pos_cart)));console.log(scope)}
           }
           catch(err)
           {
