@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { PaperScope,Path,Point,Project,Group,PointText, project, tool } from 'paper'
+import { PaperScope,Path,Point,Project,Group,PointText, project, tool,hitTest } from 'paper'
 import './papel.css';
 
 class Papel extends Component {
@@ -16,7 +16,7 @@ class Papel extends Component {
   render() {
         return (
 
-            <canvas id="paper" width={200} height={520} />
+            <canvas id="paper" width={600} height={600} />
 
 
         )
@@ -36,6 +36,7 @@ class Papel extends Component {
         var grid_size_y = grid_size+20;
         var canvas_width = scope.scrollWidth; //the height and the width of the canvas element
         var canvas_height = scope.scrollHeight;
+        console.log(canvas_height)
         var num_lines_x = Math.floor(canvas_height/grid_size_x);
         var num_lines_y = Math.floor(canvas_width/grid_size_y);
         var origo = new Point(100,500); //Real coordinates for the origin//
@@ -156,6 +157,7 @@ class Papel extends Component {
         function set_up_x_grid() //setting up the main horisontal grid line objects that will be numbered
         {
          //the very first x line is being drawn
+
          var a = x_axis_ori - Math.floor(x_axis_ori);
          var from = new Point(0,a*grid_size_y);
          var to = new Point(canvas_width,a*grid_size_y);
@@ -843,17 +845,16 @@ class Papel extends Component {
         	fill: true,
         	tolerance: 10,
         };
-
-        function onMouseMove(event) // when hovering over an object, like axis
+    /*    scope.view.onMouseMove=function(event) //  function onMouseMove(event)
+       // when hovering over an object, like axis
         {
             var hitResult = project.hitTest(event.point,hitOptions);
             if(check_if_clicked_on_x_axis(hitResult)){document.body.style.cursor = "w-resize";}
             else if(check_if_clicked_on_y_axis(hitResult)){document.body.style.cursor = "n-resize";}
             else{document.body.style.cursor = "default";}
         }
-
-
-        function onMouseDown(event)
+ */
+        scope.view.onMouseDown=function(event)//  function onMouseDown(event)
         {
         // extracting the object that has been clicked on
         var hitResult = project.hitTest(event.point,hitOptions);
@@ -874,7 +875,8 @@ class Papel extends Component {
 
 
         //the mouse dragging event:
-        function onMouseDrag(event)
+        scope.view.onMouseDrag=function(event) //  function onMouseDrag(event)
+
          {
            if(x_axis_drag_boolean == true){drag_the_x_axis(event);update_everything();resize_and_rescale_the_grids();}
            else if(y_axis_drag_boolean == true){drag_the_y_axis(event);update_everything();resize_and_rescale_the_grids();}//y_axis.strokeColor = 'brown';
@@ -934,8 +936,8 @@ class Papel extends Component {
         }
 
         //zoom in, out
-        /*
-        scope.addEventListener("wheel",function(event){zoom(event)})
+/*
+        scope.view.addEventListener("wheel",function(event){zoom(event)})
         function zoom(event)
         {
          remove_all_PointText();//removing all the point text objects before creating them over again later
@@ -966,7 +968,7 @@ class Papel extends Component {
          if(nr_of_curves > 0){update_the_curves();}
          if(nr_of_points > 0){update_the_points();}
         }
-         */
+        */
         function update_everything()
         {
           remove_all_PointText();//removing all the point text objects before creating them over again later
@@ -989,7 +991,7 @@ class Papel extends Component {
         }
 
         // debugging code with keys
-        function onKeyDown(event)
+        scope.view.onKeyDown=function(event) // function onKeyDown(event)
         {try
           {
           if(event.key == "1"){console.log(real_to_cartesian_r(cartesian_to_real(circle1_pos_cart)));} //writing out cartesian values, rounded up to 1 digit
@@ -1013,6 +1015,7 @@ class Papel extends Component {
         document.getElementById("point").addEventListener("click",function(event){points_activate()})
         */
         circles_activate();
+                scope.view.draw();
 
 
     }
