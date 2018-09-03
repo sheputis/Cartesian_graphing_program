@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { PaperScope,Path,Point,Project } from 'paper'
 
 
-class Papel extends Component {
+class Papel2 extends Component {
   constructor(){
     super();
 
@@ -54,4 +54,4 @@ class Papel extends Component {
     }
 }
 
-export default Papel;
+export default Papel2;
