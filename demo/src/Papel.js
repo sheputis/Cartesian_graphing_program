@@ -9,7 +9,7 @@ class Papel extends Component {
     this.state={
     }
 
-    window['paper'] = new PaperScope();
+    window['paper'] =  new PaperScope();
   }
 
 
