@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { PaperScope,Path,Point,Project,Group,PointText, project, tool,hitTest } from 'paper'
+import { PaperScope,Path,Point,Project,Group,PointText, project, tool,hitTest, } from 'paper'
 import './papel.css';
 
 class Papel extends Component {
