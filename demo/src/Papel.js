@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { PaperScope,Path,Point,Project } from 'paper'
+import { PaperScope,Path,Point,Project,Group,PointText, project, tool } from 'paper'
 import './papel.css';
 
 class Papel extends Component {
@@ -34,8 +34,8 @@ class Papel extends Component {
         var grid_size=grid_size_smallest; //the amount of pixels that a grid length spans
         var grid_size_x = grid_size+50;
         var grid_size_y = grid_size+20;
-        var canvas_width = canvas.scrollWidth; //the height and the width of the canvas element
-        var canvas_height = canvas.scrollHeight;
+        var canvas_width = scope.scrollWidth; //the height and the width of the canvas element
+        var canvas_height = scope.scrollHeight;
         var num_lines_x = Math.floor(canvas_height/grid_size_x);
         var num_lines_y = Math.floor(canvas_width/grid_size_y);
         var origo = new Point(100,500); //Real coordinates for the origin//
@@ -271,24 +271,24 @@ class Papel extends Component {
         }
         function real_to_cartesian_r(r_point)
         {
-           r_point=r_point;
-           c_point=new Point(0,0);
+           var r_point=r_point;
+           var c_point=new Point(0,0);
            c_point.x= Math.round((r_point.x/grid_size_x-y_axis_ori)*num_scale_x*precision)/precision;
            c_point.y=-Math.round((r_point.y/grid_size_y-x_axis_ori)*num_scale_y*precision)/precision;
            return c_point;
          }
         function real_to_cartesian(r_point) //real pixel coordinates to cartesian on the screen
         {
-         r_point=r_point;
-         c_point=new Point(0,0);
+         var r_point=r_point;
+         var c_point=new Point(0,0);
          c_point.x=(r_point.x/grid_size_x-y_axis_ori)*num_scale_x;
          c_point.y=-(r_point.y/grid_size_y-x_axis_ori)*num_scale_y;
          return c_point;
         }
         function cartesian_to_real(c_point) // from cartesian on the screen to real pixel coordinates
         {
-           c_point=c_point;
-           r_point=new Point(0,0);
+           var c_point=c_point;
+           var r_point=new Point(0,0);
            r_point.x=(c_point.x/num_scale_x+y_axis_ori)*grid_size_x;
            r_point.y=(-c_point.y/num_scale_y+x_axis_ori)*grid_size_y;
            return r_point;
@@ -308,6 +308,12 @@ class Papel extends Component {
            PointTexts[i].remove();
          }
         }
+        var circle1_pos;
+        var circle1_pos_cart;
+        var circle1;
+        var circle2_pos;
+        var circle2_pos_cart;
+        var circle2;
         function create_circles() // creating the two circles that will be moved around
         {
           circle1_pos = new Point(50,50);
@@ -349,6 +355,7 @@ class Papel extends Component {
           circle2.bringToFront();
           circle2.name = 'pshh2';
         }
+        var linex;
         function create_line_between_circles()
         {
           linex= new Path();
@@ -373,6 +380,8 @@ class Papel extends Component {
 
 
         }
+        var linex_seg_1_cart;
+        var linex_seg_2_cart;
         function update_linex() // updates the line between the circles
         {
           var a=(circle1.position.y-circle2.position.y)/(circle1.position.x-circle2.position.x);
@@ -423,6 +432,7 @@ class Papel extends Component {
 
 
         }
+        var nr_points;
         function create_function() // initializing the function to be plotted, with numbers of points and so on.
         {
 
@@ -685,6 +695,8 @@ class Papel extends Component {
         {
           create_points_boolean = true;
         }
+        var points_list_cart;
+        var points_list;
         function create_points(event)
         {
           nr_of_points++;
@@ -809,9 +821,9 @@ class Papel extends Component {
         //setting up the variables for creating points:
         var create_points_boolean = false;
         var nr_of_points = 0;
-        points_list = ['shit'];
-        points_list_cart = ['shit'];
-        point_move_boolean = false; // this is for moving the point
+        var points_list = ['shit'];
+        var points_list_cart = ['shit'];
+        var point_move_boolean = false; // this is for moving the point
 
 
 
@@ -922,7 +934,8 @@ class Papel extends Component {
         }
 
         //zoom in, out
-        canvas.addEventListener("wheel",function(event){zoom(event)})
+        /*
+        scope.addEventListener("wheel",function(event){zoom(event)})
         function zoom(event)
         {
          remove_all_PointText();//removing all the point text objects before creating them over again later
@@ -953,6 +966,7 @@ class Papel extends Component {
          if(nr_of_curves > 0){update_the_curves();}
          if(nr_of_points > 0){update_the_points();}
         }
+         */
         function update_everything()
         {
           remove_all_PointText();//removing all the point text objects before creating them over again later
@@ -998,7 +1012,8 @@ class Papel extends Component {
         document.getElementById("curve2").addEventListener("click",function(event){curve_deactivate()})
         document.getElementById("point").addEventListener("click",function(event){points_activate()})
         */
-        circles_activate()
+        circles_activate();
+
 
     }
 }
