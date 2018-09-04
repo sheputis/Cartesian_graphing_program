@@ -34,8 +34,8 @@ class Papel extends Component {
         var grid_size=grid_size_smallest; //the amount of pixels that a grid length spans
         var grid_size_x = grid_size+50;
         var grid_size_y = grid_size+20;
-        var canvas_width = scope.scrollWidth; //the height and the width of the canvas element
-        var canvas_height = scope.scrollHeight;
+        var canvas_width = scope.view.bounds.width;//scope.scrollWidth; //the height and the width of the canvas element
+        var canvas_height = scope.view.bounds.height;//scope.scrollHeight;
         var num_lines_x = Math.floor(canvas_height/grid_size_x);
         var num_lines_y = Math.floor(canvas_width/grid_size_y);
         var origo = new Point(100,500); //Real coordinates for the origin//
@@ -153,33 +153,7 @@ class Papel extends Component {
           }
           lines_y_smaller.sendToBack();
         }
-        function set_up_x_grid_test() //setting up the main horisontal grid line objects that will be numbered
-        {
-         //the very first x line is being drawn
-         var a = x_axis_ori - Math.floor(x_axis_ori);
-         var from = new Point(0,a*grid_size_y);
-         var to = new Point(canvas_width,a*grid_size_y);
-         var first_line = new Path.Line(from, to);
-         lines_x.addChild(first_line);
-         lines_x.strokeColor = grid_color;
-         console.log(from)
-         // copying the first line object and pasting it downwards with intervals
-         var pshhh = new Path.Line({x:100,y:100},{x:400,y:400});
-         pshhh.strokeColor = 'black'
-         for (var i=1;i<=num_lines_x; i++ )
-         {
-           var line = first_line.clone();
-           line.segments[0].point.y=grid_size_y*(i+a);
-           line.segments[1].point.y=grid_size_y*(i+a)
-           lines_x.addChild(line);
-         }
-         // adding and coloring the x axis:
-         x_axis=new Path();
-         x_axis.strokeColor=axis_color;
-         x_axis.add(new Point(0,grid_size_y*x_axis_ori));
-         x_axis.add(new Point(canvas_width,grid_size_y*x_axis_ori));
-         x_axis.name = "x_axis";
-        }
+      
         function set_up_x_grid() //setting up the main horisontal grid line objects that will be numbered
         {
          //the very first x line is being drawn
@@ -853,8 +827,7 @@ class Papel extends Component {
         var point_move_boolean = false; // this is for moving the point
 
 
-        set_up_x_grid_test();
-      //  set_up_x_grid();  // setting up the horisontal grid elements
+        set_up_x_grid();  // setting up the horisontal grid elements
         set_up_y_grid();  // setting up the vertical grid elements
 
         set_up_x_grid_smaller();  // setting up the smaller horisontal grid elements
