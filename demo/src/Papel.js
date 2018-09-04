@@ -60,7 +60,7 @@ class Papel extends Component {
         var mouse_pos_pixel_old = 0;
         var mouse_pos_cart = 0;
         var mouse_pos_pixel_new = 0;
-        var mouse_pos_pixel_delta = 0;
+        var mouse_pos_pixel_delta = new Point();
 
         // updating the grid size, the origin in both pixel and cartesian.
         function update_parameters(grid_size_x,grid_size_y) //this function is used for every iteration of OnFrame() and for every onMouseDrag() events
@@ -846,9 +846,10 @@ class Papel extends Component {
         	tolerance: 10,
         };
 
-        function onMouseMove(event) // when hovering over an object, like axis
+      //  function onMouseMove(event) // when hovering over an object, like axis
+        scope.view.onMouseMove = function(event)
         {
-            var hitResult = Project.hitTest(event.point,hitOptions);
+            var hitResult = scope.project.hitTest(event.point,hitOptions);
             if(check_if_clicked_on_x_axis(hitResult)){document.body.style.cursor = "w-resize";}
             else if(check_if_clicked_on_y_axis(hitResult)){document.body.style.cursor = "n-resize";}
             else{document.body.style.cursor = "default";}
@@ -873,9 +874,10 @@ class Papel extends Component {
         }
 
 
-
+        var toolio = new scope.Tool();
+        toolio.minDistance = 1;
         //the mouse dragging event:
-        scope.view.onMouseDrag = function(event) //        function onMouseDrag(event)
+        toolio.onMouseDrag = function(event) //        function onMouseDrag(event)
          {
            if(x_axis_drag_boolean == true){drag_the_x_axis(event);update_everything();resize_and_rescale_the_grids();}
            else if(y_axis_drag_boolean == true){drag_the_y_axis(event);update_everything();resize_and_rescale_the_grids();}//y_axis.strokeColor = 'brown';
@@ -888,7 +890,6 @@ class Papel extends Component {
              // updating the origin by the amount that the dragging mouse has moved
              origo.x += event.delta.x;
              origo.y += event.delta.y;
-
              update_parameters(grid_size_x,grid_size_y)
 
              update_x_grid();
@@ -917,7 +918,10 @@ class Papel extends Component {
          }
 
         // when the mouse is up again, the circle_move has to go back to false
-        function onMouseUp(event)
+
+
+        //function onMouseUp(event)
+        scope.view.onMouseUp = function(event)//scope.view.onMouseUp = function(event)
         {
           circle_move=false;
           //finishing drawing a line and adding the cartesian position in the array;
@@ -934,12 +938,14 @@ class Papel extends Component {
           x_axis.strokeColor = 'black';
           y_axis.strokeColor = 'black';
           //setting the event intervals back to the small default value, because drawing, for example, is set to 20px
-          tool.minDistance = 1;
+          toolio.minDistance = 1;
+
+
         }
 
         //zoom in, out
-        /*
-        scope.addEventListener("wheel",function(event){zoom(event)})
+
+        window.addEventListener("wheel",function(event){zoom(event)})
         function zoom(event)
         {
          remove_all_PointText();//removing all the point text objects before creating them over again later
@@ -949,11 +955,16 @@ class Papel extends Component {
 
          update_grid_size_by_zooming(event);//this function updates the grid_size when the wheel event is activated, the num_scale is also adjusted accordingly
 
-         update_parameters(grid_size_x,grid_size_y,origo);// by updating the parameters here, the zooming into the origin will take effect
+         update_parameters(grid_size_x,grid_size_y);// by updating the parameters here, the zooming into the origin will take effect
          mouse_pos_pixel_new = cartesian_to_real(mouse_pos_cart) // finding where the cartesian position is after the zooming (in pixel)
-         mouse_pos_pixel_delta = mouse_pos_pixel_new - mouse_pos_pixel_old; // finding the difference between these two pixel positions
-         origo -= mouse_pos_pixel_delta; // we translate the whole grid by that difference in positions of the mouse before and after zooming
-         update_parameters(grid_size_x,grid_size_y,origo); //by updating the parameters here, the translation will take effect, so that the zoom will be onto the mouse
+
+         mouse_pos_pixel_delta.x = mouse_pos_pixel_new.x - mouse_pos_pixel_old.x; // finding the difference between these two pixel positions
+         mouse_pos_pixel_delta.y = mouse_pos_pixel_new.y - mouse_pos_pixel_old.y; // finding the difference between these two pixel positions
+
+         origo.x -= mouse_pos_pixel_delta.x; // we translate the whole grid by that difference in positions of the mouse before and after zooming
+         origo.y -= mouse_pos_pixel_delta.y; // we translate the whole grid by that difference in positions of the mouse before and after zooming
+
+         update_parameters(grid_size_x,grid_size_y); //by updating the parameters here, the translation will take effect, so that the zoom will be onto the mouse
 
          update_x_grid();
          update_y_grid();
@@ -970,7 +981,7 @@ class Papel extends Component {
          if(nr_of_curves > 0){update_the_curves();}
          if(nr_of_points > 0){update_the_points();}
         }
-         */
+
         function update_everything()
         {
           remove_all_PointText();//removing all the point text objects before creating them over again later
