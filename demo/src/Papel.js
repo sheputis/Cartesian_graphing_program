@@ -39,7 +39,6 @@ class Papel extends Component {
         var num_lines_x = Math.floor(canvas_height/grid_size_x);
         var num_lines_y = Math.floor(canvas_width/grid_size_y);
         var origo = new Point(100,500); //Real coordinates for the origin//
-
         var x_axis_ori=origo.y/grid_size_y; // where the axis origin is located//
         var y_axis_ori=origo.x/grid_size_x; //x_axis is the y coordinate of the x-line, the number of grid lines from the boundaries
 
@@ -64,12 +63,12 @@ class Papel extends Component {
         var mouse_pos_pixel_delta = 0;
 
         // updating the grid size, the origin in both pixel and cartesian.
-        function update_parameters(grid_size_x,grid_size_y,origo_) //this function is used for every iteration of OnFrame() and for every onMouseDrag() events
+        function update_parameters(grid_size_x,grid_size_y) //this function is used for every iteration of OnFrame() and for every onMouseDrag() events
         {
-          origo.x = origo_.x;
-          origo.y = origo_.y;
+
           x_axis_ori=origo.y/grid_size_y;
           y_axis_ori=origo.x/grid_size_x;
+
         }
         function set_up_x_grid_smaller() //setting up the smaller horisontal grid line objects to form the final grid
         {
@@ -212,10 +211,12 @@ class Papel extends Component {
         function update_x_grid() //used in each iteration to update the horisontal grid objects
         {
           var a = x_axis_ori - Math.floor(x_axis_ori);
+
           for (var i = 0; i <= num_lines_x; i++ ) // updating the new positions of the grids
           {
             lines_x.children[i].segments[0].point.y=grid_size_y*(i+a);
             lines_x.children[i].segments[1].point.y=grid_size_y*(i+a);
+
           }
           for(var i = 1; i < lines_x.children.length - num_lines_x;i++) // if there are too many grids, we put them outside the canvas temporarily
           {
@@ -250,7 +251,6 @@ class Papel extends Component {
          {
            if (Math.floor(i)!=0 )// && Math.floor(i)%2==0 this here is for every other line to be numbered
            {
-             console.log('setting numbers on the god damn axis')
              var text = new PointText(origo.add({ x: -20, y: (Math.floor(i))*(grid_size_y) }));
              text.justification = 'center';
              text.fillColor = axis_color;
@@ -299,7 +299,7 @@ class Papel extends Component {
          }
         function remove_all_PointText() //to remove numbers from the axis at each onFrame
         {
-         var PointTexts = Project.getItems(
+         var PointTexts = scope.project.getItems(
            {
              class: PointText,
            }
@@ -839,7 +839,6 @@ class Papel extends Component {
         set_up_numbers_on_y_axis(); //  setting up the numbers along y axis
         set_up_numbers_on_x_axis(); //  setting up the numbers along x axis
 
-
         var hitOptions = {
           segments: true,
         	stroke: true,
@@ -858,9 +857,8 @@ class Papel extends Component {
         scope.view.onMouseDown = function(event) //function onMouseDown(event)
         {
         // extracting the object that has been clicked on
-        console.log(Project.view)
-        var hitResult = Project.hitTest(event.point,hitOptions);
-        console.log(hitResult)
+
+        var hitResult = scope.project.hitTest(event.point,hitOptions);
         //checking if the object that has been hit is a circle, if so, circle_move is assing TRUE so that it can be moved around in drag()
         circle_move = check_if_clicked_on_circle(hitResult);
         point_move_boolean = check_if_clicked_on_point(hitResult);
@@ -877,7 +875,7 @@ class Papel extends Component {
 
 
         //the mouse dragging event:
-        function onMouseDrag(event)
+        scope.view.onMouseDrag = function(event) //        function onMouseDrag(event)
          {
            if(x_axis_drag_boolean == true){drag_the_x_axis(event);update_everything();resize_and_rescale_the_grids();}
            else if(y_axis_drag_boolean == true){drag_the_y_axis(event);update_everything();resize_and_rescale_the_grids();}//y_axis.strokeColor = 'brown';
@@ -887,8 +885,11 @@ class Papel extends Component {
            else if(circle_move == false && draw_a_line_boolean == false && draw_a_curve_boolean == false && point_move_boolean == false && x_axis_drag_boolean == false && y_axis_drag_boolean == false)
            {
 
-             origo += event.delta; // updating the origin by the amount that the dragging mouse has moved
-             update_parameters(grid_size_x,grid_size_y,origo)
+             // updating the origin by the amount that the dragging mouse has moved
+             origo.x += event.delta.x;
+             origo.y += event.delta.y;
+
+             update_parameters(grid_size_x,grid_size_y)
 
              update_x_grid();
              update_y_grid();
