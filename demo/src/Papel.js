@@ -153,7 +153,7 @@ class Papel extends Component {
           }
           lines_y_smaller.sendToBack();
         }
-      
+
         function set_up_x_grid() //setting up the main horisontal grid line objects that will be numbered
         {
          //the very first x line is being drawn
@@ -250,10 +250,13 @@ class Papel extends Component {
          {
            if (Math.floor(i)!=0 )// && Math.floor(i)%2==0 this here is for every other line to be numbered
            {
-             var text = new PointText(origo+ { x: -20, y: (Math.floor(i))*(grid_size_y) });
+             console.log('setting numbers on the god damn axis')
+             var text = new PointText(origo.add({ x: -20, y: (Math.floor(i))*(grid_size_y) }));
              text.justification = 'center';
              text.fillColor = axis_color;
              text.content = - fix_the_nr(Math.floor(i)*num_scale_y,nr_of_scalings_y);
+             console.log( )
+
            }
          }
         }
@@ -263,7 +266,7 @@ class Papel extends Component {
          {
            if (Math.floor(i)!=0) // &&Math.floor(i)%2==0
            {
-             var text = new PointText(origo+ { x: Math.floor(i)*grid_size_x, y: 0.5*25 });
+             var text = new PointText(origo.add({ x: Math.floor(i)*grid_size_x, y: 0.5*25 }));
              text.justification = 'center';
              text.fillColor = axis_color;
              text.content = fix_the_nr(Math.floor(i)*num_scale_x,nr_of_scalings_x);
