@@ -410,6 +410,7 @@ class Papel extends Component {
         }
         function drag_the_circle_and_update_line(event) // event is the instance of the mouse position, which updates the circle that is dragged and then the line is updated
         {
+          console.log(move_who)
           move_who.position = event.point; //assigning the circle position to
           update_linex()
           if(move_who.name == 'pshh1'){circle1_pos_cart = real_to_cartesian(move_who.position)}
@@ -757,7 +758,7 @@ class Papel extends Component {
           var axis_move_ = false;
           if (hitResult!=null)
           {
-           if (hitResult.type == 'stroke'  && hitResult.item.name == 'x_axis')// && hitResult.item.name = 'pshh'
+           if (hitResult.type == 'stroke'  && hitResult.item.name == 'x_axis' && circle_move == false)// && hitResult.item.name = 'pshh'
            {
              axis_move_=true;
              move_who= hitResult.item;
@@ -770,7 +771,7 @@ class Papel extends Component {
           var axis_move_ = false;
           if (hitResult!=null)
           {
-           if (hitResult.type == 'stroke'  && hitResult.item.name == 'y_axis')// && hitResult.item.name = 'pshh'
+           if (hitResult.type == 'stroke'  && hitResult.item.name == 'y_axis' && circle_move == false)// && hitResult.item.name = 'pshh'
            {
              axis_move_=true;
              move_who= hitResult.item;
@@ -849,7 +850,9 @@ class Papel extends Component {
       //  function onMouseMove(event) // when hovering over an object, like axis
         scope.view.onMouseMove = function(event)
         {
+
             var hitResult = scope.project.hitTest(event.point,hitOptions);
+            console.log(hitResult)
             if(check_if_clicked_on_x_axis(hitResult)){document.body.style.cursor = "w-resize";}
             else if(check_if_clicked_on_y_axis(hitResult)){document.body.style.cursor = "n-resize";}
             else{document.body.style.cursor = "default";}
